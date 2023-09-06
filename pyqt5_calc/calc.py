@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLineEdit,\
 
 from PyQt5.QtCore import Qt
 
+def help():
+    return('Use "/" for exec')
+
 class PyQt5Calculator(QMainWindow):
     """MainWindow Class that contains all methods and params for calculator"""
 
@@ -60,11 +63,18 @@ class PyQt5Calculator(QMainWindow):
     def _eval_line(self):
         
         line_text = self.line_edit.text()
-        try:
-            line_text = eval(line_text)
-            self.line_edit.setText(str(line_text))
-        except SyntaxError:
-            self.line_edit.setText('ERROR')
+        if line_text[0] == '/':
+            try:
+                exec(line_text[1:])
+                self.line_edit.setText('Executed')
+            except:
+                self.line_edit.setText('ERROR')
+        else:
+            try:
+                line_text = eval(line_text)
+                self.line_edit.setText(str(line_text))
+            except:
+                self.line_edit.setText('ERROR')
 
     def _clear_line(self):
         self.line_edit.setText('')
