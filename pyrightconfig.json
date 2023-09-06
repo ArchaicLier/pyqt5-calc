@@ -1,0 +1,29 @@
+{
+    "include": [
+      "*.py"
+    ],
+    
+    "exclude": [
+      "**/node_modules",
+      "**/__pycache__",
+      "**/venv"
+    ],
+  
+    "ignore": [
+      
+    ],
+  
+    "defineConstant": {
+      "DEBUG": true
+    },
+  
+    "venv": "venv",
+    "venvPath": ".",
+  
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+  
+    "pythonVersion": "3.5",
+    "pythonPlatform": "Linux"
+  
+  }
