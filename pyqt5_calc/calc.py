@@ -1,7 +1,6 @@
 """PyQt5 Calculator"""
 from functools import partial
-
-from ast import literal_eval
+from math import pi,sqrt
 
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLineEdit,\
     QPushButton, QWidget
@@ -19,8 +18,8 @@ class PyQt5Calculator(QMainWindow):
         #Buttons layout
         self.buttons_layout = {} # type: dict[str,QPushButton]
         buttons_layout = [
-            ['7','8','9','/','C'],
-            ['4','5','6','*','('],
+            ['7','8','9','/','C','pi'],
+            ['4','5','6','*','(','sqrt'],
             ['1','2','3','-',')'],
             ['0','00','.','+','=']
         ]
@@ -48,19 +47,23 @@ class PyQt5Calculator(QMainWindow):
 
     def _bind_key(self):
         for key,button in self.buttons_layout.items():
-            if key not in ('C','='):
+            if key not in ('C','=','sqrt'):
                 button.clicked.connect(partial(self._add_text,key))
+
+        self.buttons_layout['sqrt'].clicked.connect(partial(self._add_text,'sqrt('))
+
         self.buttons_layout['C'].clicked.connect(self._clear_line)
 
         self.buttons_layout['='].clicked.connect(self._eval_line)
         self.line_edit.returnPressed.connect(self._eval_line)
 
     def _eval_line(self):
+        
         line_text = self.line_edit.text()
         try:
-            line_text = literal_eval(line_text)
+            line_text = eval(line_text)
             self.line_edit.setText(str(line_text))
-        except ValueError:
+        except SyntaxError:
             self.line_edit.setText('ERROR')
 
     def _clear_line(self):

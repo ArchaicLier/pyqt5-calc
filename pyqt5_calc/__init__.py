@@ -1,2 +1,4 @@
-"""PyQt5 Calculator"""
+"""PyQt Calculator"""
 __all__ = ['calc']
+
+from . import calc
