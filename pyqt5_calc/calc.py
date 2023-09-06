@@ -2,6 +2,8 @@
 from functools import partial
 from math import pi,sqrt
 
+import subprocess
+
 from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLineEdit,\
     QPushButton, QWidget
 
@@ -69,6 +71,13 @@ class PyQt5Calculator(QMainWindow):
                 self.line_edit.setText('Executed')
             except:
                 self.line_edit.setText('ERROR')
+        elif line_text[0] == '!':
+            with subprocess.Popen(line_text[1:].split(' '), stdout=subprocess.PIPE) as proc:
+                while True:
+                    line = proc.stdout.readline()
+                    self.line_edit.setText(line.decode())
+                    if line == b'':
+                        break
         else:
             try:
                 line_text = eval(line_text)
