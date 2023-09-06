@@ -1,5 +1,7 @@
 """PyQt5 Calculator"""
-from .calc import *
+from PyQt5.QtWidgets import QApplication
+
+from calc import PyQt5Calculator
 
 if __name__ == "__main__":
     app = QApplication([])
