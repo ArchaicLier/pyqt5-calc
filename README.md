@@ -11,3 +11,18 @@ Run
 ```
 python -m pyqt5_calc
 ```
+
+Python exec() (In calculator field)
+```
+/print(1)
+```
+
+Python subprocess (In calculator field)
+```
+!ls -l
+```
+
+Plugins(In calculator field)
+```
+self._load_plugin('example')
+```

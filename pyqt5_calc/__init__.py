@@ -1,4 +1,5 @@
 """PyQt Calculator"""
-__all__ = ['calc']
+#TODO Разобраться с порядком insert
+from .plugins_manager import *
+from .calc import *
 
-from . import calc

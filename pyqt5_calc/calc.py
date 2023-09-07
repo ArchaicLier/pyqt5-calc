@@ -9,14 +9,15 @@ from PyQt5.QtWidgets import QMainWindow, QGridLayout, QLineEdit,\
 
 from PyQt5.QtCore import Qt
 
-def help():
-    return('Use "/" for exec')
+from . import plugins_manager
 
 class PyQt5Calculator(QMainWindow):
     """MainWindow Class that contains all methods and params for calculator"""
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent = parent)
+
+        self.plugins_manager = plugins_manager.PluginsManager(self)
 
         button_size = 30
 
@@ -50,6 +51,12 @@ class PyQt5Calculator(QMainWindow):
 
         self.setCentralWidget(widget)
 
+    def _show_plugins(self):
+        return self.plugins_manager.available_plugins.keys()
+    
+    def _load_plugin(self,plugin_name):
+        return self.plugins_manager.load_plugin(plugin_name)
+
     def _bind_key(self):
         for key,button in self.buttons_layout.items():
             if key not in ('C','=','sqrt'):
@@ -73,11 +80,9 @@ class PyQt5Calculator(QMainWindow):
                 self.line_edit.setText('ERROR')
         elif line_text[0] == '!':
             with subprocess.Popen(line_text[1:].split(' '), stdout=subprocess.PIPE) as proc:
-                while True:
-                    line = proc.stdout.readline()
+                for line in proc.stdout.readlines():
+                    print(line.decode())
                     self.line_edit.setText(line.decode())
-                    if line == b'':
-                        break
         else:
             try:
                 line_text = eval(line_text)
