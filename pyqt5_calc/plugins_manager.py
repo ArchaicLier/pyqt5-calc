@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 import importlib
 import pkgutil
+from re import I
 import typing
 
 import pyqt5_calc.plugins
 
 from .calc import PyQt5Calculator
+
+from PyQt5.QtWidgets import QAction, QMainWindow, QListWidget, QListWidgetItem, QPushButton, QWidget, QVBoxLayout
 
 class AbstractPlugin(ABC):
     """Plugin abstract class"""
@@ -37,6 +40,27 @@ class AbstractPlugin(ABC):
         """
         ...
 
+class PluginsManagerWindow(QMainWindow):
+    def __init__(self, manager, parent=None) -> None:
+        super().__init__(parent)
+
+        widget = QWidget()
+        layout = QVBoxLayout(widget)
+
+        qlist_plguins = QListWidget()
+        layout.addWidget(qlist_plguins)
+
+        item_test = QListWidgetItem('Test')
+
+        qlist_plguins.addItem(item_test)
+        qlist_plguins.itemClicked.connect(self._item_clicked)
+
+        self.setCentralWidget(widget)
+
+    def _item_clicked(self,item:QListWidgetItem):
+        print(item.text())
+
+
 class PluginsManager():
     """Plugins manager window"""
 
@@ -51,6 +75,9 @@ class PluginsManager():
             for finder, name, ispkg
             in pkgutil.iter_modules(pyqt5_calc.plugins.__path__)
         }
+
+        self.window_plugins = PluginsManagerWindow(self)
+        self.window_plugins.show()
 
     def load_plugin(self, plugin_name) -> str:
         if plugin_name in self.loaded_plugins:
