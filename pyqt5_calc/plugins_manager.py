@@ -13,25 +13,24 @@ from PyQt5.QtWidgets import QAction, QMainWindow, QListWidget, QListWidgetItem, 
 class AbstractPlugin(ABC):
     """Plugin abstract class"""
 
-    #TODO Заменить statiсmetohod на что-то другое 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def _name()->str:
-        """Plguin name"""
+    def _name(cls)->str:
+        """Plugin name"""
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def _version() -> str:
+    def _version(cls) -> str:
         """Plugin version"""
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def _about() -> str:
+    def _about(cls) -> str:
         """Plugins about"""
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def _authors() -> str:
+    def _authors(cls) -> str:
         """Plugin author"""
 
     @abstractmethod
@@ -46,10 +45,10 @@ class PluginItem(QListWidgetItem):
 
     def __init__(self, plugin:typing.Type[AbstractPlugin], parent:typing.Optional[QWidget]=None) -> None:
         super().__init__(parent=parent)
-        
+
         self.setText(plugin._name())
 
-        self.plguin = plugin
+        self.plugin = plugin
 
 
 class PluginsManager():
@@ -77,14 +76,14 @@ class PluginsManager():
         self.window_plugins = PluginsManagerWindow(self)
         self.window_plugins.show()
 
-    def load_plugin(self, plugin: typing.Type[AbstractPlugin]) -> str:
+    def load_plugin(self, plugin: typing.Type[AbstractPlugin]) -> int:
         if plugin in self.loaded_plugins:
-            return 'Plugin already loaded'
+            return 0
         else:
             loaded_plugin = plugin()
             loaded_plugin.load_plugin(self.window)
             self.loaded_plugins[plugin] = loaded_plugin
-            return 'Plugin loaded'
+            return 1
 
 
 class PluginsManagerWindow(QMainWindow):
@@ -107,4 +106,5 @@ class PluginsManagerWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def _item_clicked(self,item:PluginItem):
-        self.manager.load_plugin(item.plguin)
+        if (self.manager.load_plugin(item.plugin)):
+            item.setText(item.text()+'(loaded)')

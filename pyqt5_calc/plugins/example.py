@@ -1,22 +1,22 @@
 from pyqt5_calc.plugins_manager import AbstractPlugin
 import pyqt5_calc.calc
 
-class Plugin(AbstractPlugin):
+class ResizeButtonPlugin(AbstractPlugin):
 
-    @staticmethod
-    def _name() -> str:
+    @classmethod
+    def _name(cls) -> str:
         return 'Resize Buttons'
 
-    @staticmethod
-    def _version() -> str:
+    @classmethod
+    def _version(cls) -> str:
         return '1.0.0'
     
-    @staticmethod
-    def _authors() -> str:
+    @classmethod
+    def _authors(cls) -> str:
         return 'Archaic Lier'
 
-    @staticmethod
-    def _about() -> str:
+    @classmethod
+    def _about(cls) -> str:
         return """Example plugin: Resize buttons"""
 
     def load_plugin(self, window:pyqt5_calc.calc.PyQt5Calculator) -> None:
