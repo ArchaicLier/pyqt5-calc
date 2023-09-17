@@ -17,7 +17,9 @@ class PyQt5Calculator(QMainWindow):
     def __init__(self, parent = None) -> None:
         super().__init__(parent = parent)
 
+        #TODO Add button/panel for showing plugins manger window
         self.plugins_manager = plugins_manager.PluginsManager(self)
+        
 
         button_size = 30
 

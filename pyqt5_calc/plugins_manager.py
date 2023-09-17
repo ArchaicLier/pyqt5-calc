@@ -8,7 +8,7 @@ import pyqt5_calc.plugins
 
 from .calc import PyQt5Calculator
 
-from PyQt5.QtWidgets import QAction, QMainWindow, QListWidget, QListWidgetItem, QPushButton, QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QListWidget, QListWidgetItem, QPushButton, QWidget, QVBoxLayout
 
 class AbstractPlugin(ABC):
     """Plugin abstract class"""
@@ -85,7 +85,6 @@ class PluginsManager():
             self.loaded_plugins[plugin] = loaded_plugin
             return 1
 
-
 class PluginsManagerWindow(QMainWindow):
     def __init__(self, manager: PluginsManager, parent=None) -> None:
         super().__init__(parent)
@@ -99,9 +98,10 @@ class PluginsManagerWindow(QMainWindow):
         layout.addWidget(qlist_plguins)
         qlist_plguins.itemClicked.connect(self._item_clicked)
 
-
         for name,plugin in manager.available_plugins.items():
             qlist_plguins.addItem(plugin)
+
+        #TODO Add widget thats show plugin info and have "enabale" button
 
         self.setCentralWidget(widget)
 
