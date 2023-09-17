@@ -80,7 +80,7 @@ class PyQt5Calculator(QMainWindow):
                 self.line_edit.setText('ERROR')
         elif line_text[0] == '!':
             with subprocess.Popen(line_text[1:].split(' '), stdout=subprocess.PIPE) as proc:
-                for line in proc.stdout.readlines():
+                for line in proc.stdout.readlines(): #type: ignore
                     print(line.decode())
                     self.line_edit.setText(line.decode())
         else:

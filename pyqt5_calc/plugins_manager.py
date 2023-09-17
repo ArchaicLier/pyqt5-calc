@@ -13,23 +13,25 @@ from PyQt5.QtWidgets import QAction, QMainWindow, QListWidget, QListWidgetItem, 
 class AbstractPlugin(ABC):
     """Plugin abstract class"""
 
-    @property
+    @staticmethod
     @abstractmethod
-    def _version(self) -> str:
+    def _name()->str:
+        """Plguin name"""
+
+    @staticmethod
+    @abstractmethod
+    def _version() -> str:
         """Plugin version"""
-        ...
 
-    @property
+    @staticmethod
     @abstractmethod
-    def _about(self) -> str:
+    def _about() -> str:
         """Plugins about"""
-        ...
 
-    @property
+    @staticmethod
     @abstractmethod
-    def _authors(self) -> str:
+    def _authors() -> str:
         """Plugin author"""
-        ...
 
     @abstractmethod
     def load_plugin(self, window:PyQt5Calculator) -> None:
@@ -38,7 +40,16 @@ class AbstractPlugin(ABC):
         Args:
             window (PyQt5Calculator): window
         """
-        ...
+
+class PluginItem(QListWidgetItem):
+
+    def __init__(self, plugin:typing.Type[AbstractPlugin], parent:typing.Optional[QWidget]=None) -> None:
+        super().__init__(parent=parent)
+        
+        self.setText(plugin._name())
+
+        self.plguin = plugin
+
 
 class PluginsManager():
     """Plugins manager window"""
@@ -55,13 +66,13 @@ class PluginsManager():
             in pkgutil.iter_modules(pyqt5_calc.plugins.__path__)
         }
 
-        self.available_plugins = {} # type: typing.Dict[str, typing.Type[AbstractPlugin]]
+        self.available_plugins = {} # type: typing.Dict[str, PluginItem]
 
-        #TODO Add PlguinItem class
+        #TODO Подумать над системой загрузки плагинов...
         for module_name,module in self.available_modules.items():
             for class_name, class_obj in inspect.getmembers(module, inspect.isclass):
                 if issubclass(class_obj,AbstractPlugin) and class_obj != AbstractPlugin:
-                    self.available_plugins['{}.{}'.format(module_name,class_name)] = class_obj
+                    self.available_plugins['{}.{}'.format(module_name,class_name)] = PluginItem(class_obj)
 
         print(self.available_plugins)
 
@@ -86,6 +97,8 @@ class PluginsManagerWindow(QMainWindow):
     def __init__(self, manager: PluginsManager, parent=None) -> None:
         super().__init__(parent)
 
+        self.manager = manager
+
         widget = QWidget()
         layout = QVBoxLayout(widget)
 
@@ -93,7 +106,11 @@ class PluginsManagerWindow(QMainWindow):
         layout.addWidget(qlist_plguins)
         qlist_plguins.itemClicked.connect(self._item_clicked)
 
+
+        for name,plugin in manager.available_plugins.items():
+            qlist_plguins.addItem(plugin)
+
         self.setCentralWidget(widget)
 
-    def _item_clicked(self,item:QListWidgetItem):
-        print(item.text())
+    def _item_clicked(self,item:PluginItem):
+        print(item.plguin._about())

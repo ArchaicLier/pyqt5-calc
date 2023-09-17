@@ -4,19 +4,21 @@ import typing
 
 class Plugin(AbstractPlugin):
 
-    @property
-    def _version(self) -> str:
+    @staticmethod
+    def _name() -> str:
+        return 'Resize Buttons'
+
+    @staticmethod
+    def _version() -> str:
         return '1.0.0'
     
-    @property
-    def _authors(self) -> str:
+    @staticmethod
+    def _authors() -> str:
         return 'Archaic Lier'
 
-    @property
-    def _about(self) -> str:
-        return """Example plugin:
-        Resize buttons
-        """
+    @staticmethod
+    def _about() -> str:
+        return """Example plugin: Resize buttons"""
 
     def load_plugin(self, window:pyqt5_calc.calc.PyQt5Calculator) -> None:
         """Change buttons size"""
