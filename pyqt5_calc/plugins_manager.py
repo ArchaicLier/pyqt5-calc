@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QAction, QMainWindow, QListWidget, QListWidgetItem, 
 class AbstractPlugin(ABC):
     """Plugin abstract class"""
 
+    #TODO Заменить statiсmetohod на что-то другое 
     @staticmethod
     @abstractmethod
     def _name()->str:
@@ -68,30 +69,23 @@ class PluginsManager():
 
         self.available_plugins = {} # type: typing.Dict[str, PluginItem]
 
-        #TODO Подумать над системой загрузки плагинов...
         for module_name,module in self.available_modules.items():
             for class_name, class_obj in inspect.getmembers(module, inspect.isclass):
                 if issubclass(class_obj,AbstractPlugin) and class_obj != AbstractPlugin:
                     self.available_plugins['{}.{}'.format(module_name,class_name)] = PluginItem(class_obj)
 
-        print(self.available_plugins)
-
         self.window_plugins = PluginsManagerWindow(self)
         self.window_plugins.show()
 
-    def load_plugin(self, plugin_name) -> str:
-        if plugin_name in self.loaded_plugins:
+    def load_plugin(self, plugin: typing.Type[AbstractPlugin]) -> str:
+        if plugin in self.loaded_plugins:
             return 'Plugin already loaded'
-        if plugin_name in self.available_plugins:
-
-            plugin = self.available_plugins[plugin_name]()
-            plugin.load_plugin(self.window)
-
-            self.loaded_plugins[plugin_name] = plugin
-            
+        else:
+            loaded_plugin = plugin()
+            loaded_plugin.load_plugin(self.window)
+            self.loaded_plugins[plugin] = loaded_plugin
             return 'Plugin loaded'
 
-        return 'No named plugin'
 
 class PluginsManagerWindow(QMainWindow):
     def __init__(self, manager: PluginsManager, parent=None) -> None:
@@ -113,4 +107,4 @@ class PluginsManagerWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def _item_clicked(self,item:PluginItem):
-        print(item.plguin._about())
+        self.manager.load_plugin(item.plguin)

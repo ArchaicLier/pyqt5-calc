@@ -1,6 +1,5 @@
 from pyqt5_calc.plugins_manager import AbstractPlugin
 import pyqt5_calc.calc
-import typing
 
 class Plugin(AbstractPlugin):
 
@@ -24,4 +23,3 @@ class Plugin(AbstractPlugin):
         """Change buttons size"""
         for key,button in window.buttons_layout.items():
             button.setFixedSize(50,50)
-
